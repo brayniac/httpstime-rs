@@ -11,8 +11,8 @@
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
 //
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -30,7 +30,6 @@ extern crate shuteye;
 extern crate getopts;
 extern crate curl;
 
-//use curl::http::handle;
 use getopts::Options;
 use hyper::client::Client;
 use hyper::header::{Date, HttpDate, Headers, UserAgent};
@@ -112,7 +111,7 @@ fn main() {
         Err(e) => {
             debug!("ssl verify FAIL! {}", e);
             println!("*RESULT 1 {} nan nan nan Verify fail: {}", server, e);
-            return
+            return;
         }
     }
 
@@ -159,9 +158,8 @@ fn main() {
         debug!("b: {:?}", b);
 
         shuteye::sleep(shuteye::Timespec::from_nano(b * 1000000).unwrap());
-
-
     }
+
     let low = (x0 as f64) / 1000_f64;
     let high = (x1 as f64) / 1000_f64;
     let width = high - low;
