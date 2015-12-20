@@ -1,4 +1,4 @@
-# httpstime-rs Time over HTTPS implementation
+# httpstime-rs Time over HTTPS
 
 httpstime-rs is an implementation of the "Time over HTTPS" specification described by Poul-Henning Kamp here http://phk.freebsd.dk/time/20151129.html and is based off PHK's reference implementation.
 
