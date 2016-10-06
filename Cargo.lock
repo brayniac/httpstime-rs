@@ -1,6 +1,6 @@
 [root]
 name = "httpstime-rs"
-version = "0.1.4"
+version = "0.1.5"
 dependencies = [
  "curl 0.2.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "getopts 0.2.14 (registry+https://github.com/rust-lang/crates.io-index)",
