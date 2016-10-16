@@ -33,7 +33,7 @@ extern crate curl;
 use getopts::Options;
 use hyper::client::Client;
 use hyper::header::{Date, HttpDate, Headers, UserAgent};
-use log::{Log, LogLevel, LogLevelFilter, LogMetadata, LogRecord};
+use log::{LogLevel, LogLevelFilter, LogMetadata, LogRecord};
 use std::env;
 
 const VERSION: &'static str = env!("CARGO_PKG_VERSION");
@@ -54,12 +54,8 @@ fn main() {
     opts.optflag("h", "help", "print this help menu");
 
     let matches = match opts.parse(&args[1..]) {
-        Ok(m) => {
-            m
-        }
-        Err(f) => {
-            panic!(f.to_string())
-        }
+        Ok(m) => m,
+        Err(f) => panic!(f.to_string()),
     };
     if matches.opt_present("h") {
         print_usage(&program, opts);
@@ -84,15 +80,17 @@ fn main() {
         }
     }
 
-    let mut log_filter = LogLevelFilter::Info;
-
-    if matches.opt_present("d") {
-        log_filter = LogLevelFilter::Debug;
-    }
+    let log_filter = {
+        if matches.opt_present("d") {
+            LogLevelFilter::Debug
+        } else {
+            LogLevelFilter::Info
+        }
+    };
 
     let _ = log::set_logger(|max_log_level| {
         max_log_level.set(log_filter);
-        return Box::new(SimpleLogger);
+        Box::new(SimpleLogger)
     });
 
     debug!("httpstime-rs {} initializing...", VERSION);
@@ -141,7 +139,7 @@ fn main() {
         let mut dt = ((x1 + x0) / 2) - rtt / 2;
 
         while dt < 0 {
-            dt = dt + 1000;
+            dt += 1000;
         }
         debug!("dt: {:?}", dt);
 
@@ -150,10 +148,10 @@ fn main() {
         let mut b = dt - (now.to_timespec().nsec as i64 / 1000000);
 
         while b < 0 {
-            b = b + 1000;
+            b += 1000;
         }
         while b > 1000 {
-            b = b - 1000;
+            b -= 1000;
         }
         debug!("b: {:?}", b);
 
@@ -224,14 +222,12 @@ impl log::Log for SimpleLogger {
     }
 
     fn log(&self, record: &LogRecord) {
-        if self.enabled(record.metadata()) {
-            if record.location().module_path() == "httpstime_rs" {
-                println!("{} {:<5} [{}] {}",
-                         time::strftime("%Y-%m-%d %H:%M:%S", &time::now()).unwrap(),
-                         record.level().to_string(),
-                         "httpstime-rs",
-                         record.args());
-            }
+        if self.enabled(record.metadata()) && record.location().module_path() == "httpstime_rs" {
+            println!("{} {:<5} [{}] {}",
+                     time::strftime("%Y-%m-%d %H:%M:%S", &time::now()).unwrap(),
+                     record.level().to_string(),
+                     "httpstime-rs",
+                     record.args());
         }
     }
 }
